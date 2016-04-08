@@ -1,11 +1,11 @@
 package material.lineal.list;
 
 import java.util.Iterator;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+
+import material.lineal.list.DoubleLinkedList;
+import material.lineal.list.Position;
+import org.junit.*;
+
 import static org.junit.Assert.*;
 
 /**

@@ -88,7 +88,7 @@ public class LinkedStackFloatNoExcept {
     /**
      * Inserts a new element in the stack
      *
-     * @param element the new element so insert.
+     * @param e the new element so insert.
      */
     public void push(float e) {
         Node n = new Node(e, top);
