@@ -282,24 +282,32 @@ public class LinkedTree<E> implements Tree<E> {
         return this.iteratorFactory.createIterator(this);
     }
 
-    /** Moves a node and its corresponding subtree (rooted at pOrig) to make it as a new children of pDest */
+    /** Moves a node and its corresponding subtree (rooted at pOrig) to make it as a new children of pDest
+     *
+     * @param pOrig position of nodeOrig
+     * @param pDest position of nodeDest
+     * @return the position of destination node
+     * @throws IllegalStateException
+     */
     public Position<E> moveSubtree(Position<E> pOrig, Position<E> pDest) throws IllegalStateException{
-        TreeNode<E> nodeOrig =checkPosition(pOrig);
-        TreeNode<E> nodeDest = checkPosition(pDest);
-        if(nodeOrig.getChildren().contains(nodeDest)){ //si el nodo destino es hijo del nodo origen
-            nodeDest.setParent(nodeOrig.getParent()); //cambio el padre del destino por el del padre del origen
-            nodeOrig.setParent(nodeDest); //cambio el padre del origen por el nodo destino
-            nodeOrig.getChildren().remove(nodeDest);//elimino el nodo destino de los hijos del nodo origen
-            nodeDest.getChildren().add(nodeOrig); //meto en la lista de hijos del destino el nodo origen
-
+        TreeNode<E> nodeO = checkPosition(pOrig);
+        TreeNode<E> nodeD = checkPosition(pDest);
+        boolean descendent = false;
+        Iterator<Position<E>> it = this.iteratorFactory.createIterator(this,pOrig);
+        while(it.hasNext() && descendent==false){
+            if(it.next() == pDest){
+                descendent = true;
+            }
+        }
+        if(descendent == true){            //Si el nodo destino es descendiente del origen
+            throw new IllegalStateException("Destination Node can't be a descendent of Origin Node.");
         }else{
-            nodeOrig.getParent().getChildren().remove(nodeOrig); //remuevo el nodo hijo de la lista de hijos del padre
-            nodeOrig.setParent(nodeDest);//cambio el padre del nodo origen
-            nodeDest.getChildren().add(nodeOrig);
+            nodeO.getParent().getChildren().remove(nodeO);  //Eliminamos origen de los hijos de su padre
+            nodeO.setParent(nodeD);                         //Padre del origen = destino
+            nodeD.getChildren().add(nodeO);                 //Nodo origen en los hijos del destino
         }
 
-        return (Position) nodeDest;
-
+        return (Position) nodeD;
     }
 
 }

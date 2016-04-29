@@ -179,6 +179,49 @@ public class LinkedTreeTest {
         }
     }
 
+    /**
+     * Test of MoveSubtree remove method, of class LinkedTree.
+     */
+    @Test
+    public void testMoveSubtree() {
+        LinkedTree<String> t = new LinkedTree<String>();
+        Position<String> a = t.addRoot("A");
+        Position<String> b = t.add("B", a);
+        Position<String> c = t.add("C", a);
+        Position<String> d = t.add("D", a);
+        Position<String> e = t.add("E", b);
+        Position<String> f = t.add("F", b);
+        Position<String> g = t.add("G", f);
+        Position<String> h = t.add("H", f);
+        Position<String> i = t.add("I", h);
+        Position<String> j = t.add("J", i);
+        t.moveSubtree(f, c);
+        assertEquals(t.parent(f), c);
+        assertEquals(t.parent(h), f);
+    }
 
-    
+    /**
+     * Test of MoveSubtree remove method, of class LinkedTree.
+     */
+    @Test (expected = IllegalStateException.class)
+    public void testMoveSubtree2() {
+        LinkedTree<String> t = new LinkedTree<String>();
+        Position<String> a = t.addRoot("A");
+        Position<String> b = t.add("B", a);
+        Position<String> c = t.add("C", a);
+        Position<String> d = t.add("D", a);
+        Position<String> e = t.add("E", b);
+        Position<String> f = t.add("F", b);
+        Position<String> g = t.add("G", f);
+        Position<String> h = t.add("H", f);
+        Position<String> i = t.add("I", h);
+        Position<String> j = t.add("J", i);
+        t.moveSubtree(f, c);
+        assertEquals(t.parent(f), c);
+        assertEquals(t.parent(h), f);
+        t.moveSubtree(f, i);
+        assertEquals(t.parent(f), c);
+        assertEquals(t.parent(h), f);
+    }
+
 }

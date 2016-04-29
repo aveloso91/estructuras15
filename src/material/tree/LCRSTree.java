@@ -12,57 +12,136 @@ import material.tree.iterator.TreeIteratorFactory;
  */
 public class LCRSTree<E> implements Tree<E> {
 
-    private LCRSTreeNode<E> root; // reference to the root
-    private int size; // number of nodes
-    private TreeIteratorFactory<E> iteratorFactory;
-    
-    public class LCRSTreeNode<T>  implements Position<T> {
+    /**
+     * Inner class which represents a node of the tree
+     *
+     * @param <T> the type of the elements stored in a node
+     */
+    public class TreeNode<T>  implements Position<T> {
 
-        private T element;
-        private LCRSTreeNode<T> parent;
-        private LCRSTreeNode<T> sibling;
-        private LCRSTreeNode<T> child;
+        private T element; //The element stored in the position
+        private TreeNode<T> parent; //The parent of the node
+        private TreeNode<T> child; //Reference of the first child of the node
+        private TreeNode<T> sibling; //Reference of the first sibling of the node
+        private LCRSTree<T> myTree; //A reference to the tree where the node belongs
 
+        /**
+         * Constructor of the class
+         *
+         * @param element the element to store in the node
+         * @param parent the parent of the node
+         * @param child the child of the node
+         * @param sibling the sibling of the node
+         * @param myTree the tree where the node is stored
+         */
+        public TreeNode(T element, TreeNode<T> parent, TreeNode<T> child, TreeNode<T> sibling, LCRSTree<T> myTree) {
+            this.element = element;
+            this.parent = parent;
+            this.child = child;
+            this.sibling = sibling;
+            this.myTree = myTree;
+        }
+
+        /**
+         * Accesses to the element stored in this position
+         *
+         * @return the element of the node
+         */
         @Override
         public T getElement() {
             return element;
         }
-        public LCRSTreeNode(T element, LCRSTreeNode<T> parent,
-                            LCRSTreeNode<T> sibling, LCRSTreeNode<T> child) {
-            setElement(element);
-            setParent(parent);
-            setSibling(sibling);
-            setChild(child);
-        }
 
-        public LCRSTreeNode<T> getParent() {
-            return parent;
-        }
-
-        public void setParent(LCRSTreeNode<T> parent) {
-            this.parent = parent;
-        }
-
-        public LCRSTreeNode<T> getSibling() {
-            return sibling;
-        }
-
-        public void setSibling(LCRSTreeNode<T> sibling) {
-            this.sibling = sibling;
-        }
-
-        public LCRSTreeNode<T> getChild() {
-            return child;
-        }
-
-        public void setChild(LCRSTreeNode<T> child) {
-            this.child = child;
-        }
-
+        /**
+         * Set the element stored in this position
+         *
+         * @param element
+         */
         public void setElement(T element) {
             this.element = element;
         }
 
+        /**
+         * Accesses to the child of this node
+         *
+         * @return the child of the node
+         */
+        public TreeNode<T> getChild() {
+            return child;
+        }
+
+        /**
+         * Set the child of the node
+         *
+         * @param child
+         */
+        public void setChild(TreeNode<T> child) {
+            this.child = child;
+        }
+
+        /**
+         * Accesses to the parent of this node
+         *
+         * @return the parent of this node
+         */
+        public TreeNode<T> getParent() {
+            return parent;
+        }
+
+        /**
+         * Set the parent of this node
+         *
+         * @param parent
+         */
+        public void setParent(TreeNode<T> parent) {
+            this.parent = parent;
+        }
+
+        /**
+         * Accesses to the sibling of this node
+         *
+         * @return the sibling of this node
+         */
+        public TreeNode<T> getSibling() {
+            return sibling;
+        }
+
+        /**
+         * Set the sibling of this node
+         *
+         * @param sibling
+         */
+        public void setSibling(TreeNode<T> sibling) {
+            this.sibling = sibling;
+        }
+
+        /**
+         * Accesses to the tree of the node
+         *
+         * @return the tree of the node
+         */
+        public LCRSTree<T> getMyTree() {
+            return myTree;
+        }
+
+        /**
+         * Set the tree of the node
+         *
+         * @param myTree
+         */
+        public void setMyTree(LCRSTree<T> myTree) {
+            this.myTree = myTree;
+        }
+    }
+
+    private TreeNode<E> root; //The root of the tree
+    private int size; //The size of the tree
+    private TreeIteratorFactory<E> iteratorFactory; // The factory of iterators
+
+    public LCRSTree() {
+        root = null;
+        size = 0;
+        iteratorFactory = new BFSIteratorFactory<E>();
     }
 
     @Override
@@ -72,151 +151,178 @@ public class LCRSTree<E> implements Tree<E> {
 
     @Override
     public boolean isEmpty() {
-        return (size==0);
+        return (size == 0);
     }
 
     @Override
     public boolean isInternal(Position<E> v) throws IllegalStateException {
-        return !isLeaf(v);
+        return (!isLeaf(v));
     }
 
     @Override
     public boolean isLeaf(Position<E> p) throws IllegalStateException {
-        LCRSTreeNode<E> node = checkPosition(p);
+        TreeNode<E> node = checkPosition(p);
         return (node.getChild() == null);
     }
 
     @Override
     public boolean isRoot(Position<E> p) throws IllegalStateException {
-        LCRSTreeNode<E> node = checkPosition(p);
-        return (node == this.root);
+        TreeNode<E> node = checkPosition(p);
+        return (node == this.root());
     }
 
     @Override
     public Position<E> root() throws IllegalStateException {
-        if(root == null){
+        if (root == null) {
             throw new IllegalStateException("The tree is empty");
         }
         return root;
     }
 
     @Override
-    public Position<E> parent(Position<E> p) throws IndexOutOfBoundsException, IllegalStateException {
-        LCRSTreeNode<E> node = checkPosition(p);
-        Position<E> nParent = (Position<E>) node.getParent();
-        if(nParent == null){
-            throw new IndexOutOfBoundsException("No parent");
+    public Position<E> parent(Position<E> p) throws IndexOutOfBoundsException,
+            IllegalStateException {
+        TreeNode<E> node = checkPosition(p);
+        Position<E> parentPos = (Position<E>) node.getParent();
+        if (parentPos == null) {
+            throw new IndexOutOfBoundsException("The node has not parent");
         }
-        return nParent;
+        return parentPos;
     }
 
     @Override
     public Iterable<? extends Position<E>> children(Position<E> p) {
-        LCRSTreeNode<E> pos = checkPosition(p);
+        TreeNode<E> node = checkPosition(p);
         List<Position<E>> children = new ArrayList<Position<E>>();
-
-        if (isLeaf(p)) {
-            throw new IllegalStateException("External nodes have no children");
-        }
-
-        LCRSTreeNode<E> posChild = pos.getChild();   //Accedo al hijo del puntero dado
-        while (posChild != null) {
-            children.add(posChild);
-            posChild = posChild.getSibling();
+        TreeNode<E> childNode = node.getChild();
+        while(childNode != null){
+            children.add(childNode);
+            childNode = childNode.getSibling();
         }
         return children;
-
     }
 
+    /**
+     * Modifies the element stored in a given position
+     * @param p the position to be modified
+     * @param e the new element to be stored
+     * @return the previous element stored in the position
+     * @throws IllegalStateException if the position is not valid
+     */
     public E replace(Position<E> p, E e) throws IllegalStateException {
-        LCRSTreeNode<E> node = checkPosition(p);
-        E temp = p.getElement();
+        TreeNode<E> node = checkPosition(p);
+        E temp = e;
         node.setElement(e);
-        return temp;    }
+        return temp;
+    }
 
     @Override
     public Position<E> addRoot(E e) throws IllegalStateException {
-        if (!isEmpty()) {
+        if(!isEmpty()){
             throw new IllegalStateException("Tree already has a root");
         }
         size = 1;
-        root = new LCRSTreeNode<E>(e, null, null, null);
-        return root;    }
-
-    
-    public void swapElements(Position<E> p1, Position<E> p2) throws IllegalStateException {
-        LCRSTreeNode<E> node1 = checkPosition(p1);
-        LCRSTreeNode<E> node2 = checkPosition(p2);
-        E elem = node1.getElement();
-        node1.setElement(node2.getElement());
-        node2.setElement(elem);
+        root = new TreeNode<E>(e,null,null,null,this);
+        return root;
     }
 
-    
-    private LCRSTreeNode<E> checkPosition(Position<E> p) throws IllegalStateException {
-        if (p == null || !(p instanceof LCRSTreeNode)) {
+    /**
+     * Swap the elements stored in two given positions
+     * @param p1 the first node to swap
+     * @param p2 the second node to swap
+     * @throws IllegalStateException if the position of any node is not valid
+     */
+    public void swapElements(Position<E> p1, Position<E> p2)
+            throws IllegalStateException {
+        TreeNode<E> node1 = checkPosition(p1);
+        TreeNode<E> node2 = checkPosition(p2);
+        E temp = p2.getElement();
+        node2.setElement(p1.getElement());
+        node1.setElement(temp);
+    }
+
+    /**
+     * Validates the given position, casting it to TreeNode if valid
+     * @param p the position to be converted
+     * @return the position casted to TreeNode
+     * @throws IllegalStateException if the position is not valid
+     */
+    private TreeNode<E> checkPosition(Position<E> p)
+            throws IllegalStateException {
+        if (p == null || !(p instanceof TreeNode)) {
             throw new IllegalStateException("The position is invalid");
         }
-        return (LCRSTreeNode<E>) p;
+        TreeNode<E> aux = (TreeNode<E>) p;
+
+        if (aux.getMyTree() != this) {
+            throw new IllegalStateException("The node is not from this tree");
+        }
+        return aux;
     }
 
-
+    /**
+     * Adds a new node whose parent is pointed by a given position.
+     *
+     * @param element the element to be added
+     * @param p the position of the parent
+     * @return the position of the new node created
+     * @throws IllegalStateException if the position is not valid
+     */
     public Position<E> add(E element, Position<E> p) {
-        LCRSTreeNode<E> parent = checkPosition(p);
-        LCRSTreeNode<E> newNode = new LCRSTreeNode<E>(element, parent, null, null);
-        LCRSTreeNode<E> pAux;
-
-        if (parent.getChild() == null) { //Si el padre no tene hijos se añade sin dilación
-            parent.setChild(newNode);
-            newNode.setParent(parent);
-        } else if (parent.getChild() != null) { //Si tiene hijos, se recorren los hijos y ponemos el nuevo como ultimo hermano
-            pAux = parent.getChild();//Pongo el puntero auxiliar apuntando al hijo del padre dado
-            if (pAux.getSibling() == null) {//Si no tiene mas hermanos, le añado como hermano de este
-                pAux.setSibling(newNode);
-            } else {//En caso contrario (tiene mas hermanos)
-                while (pAux.getSibling() != null) {//Mientras tenga hermanos recorro hasta el ultimo
-                    pAux = pAux.getSibling();//Avanzamos el puntero hermano a hermano
-                }
-                pAux.setSibling(newNode);//Cuando no tenga mas hermanos, lo añado
-            }
+        TreeNode<E> nParent = checkPosition(p);
+        TreeNode<E> nNew = new TreeNode<E>(element,nParent,null,null,nParent.getMyTree());
+        if(nParent.getChild() == null){
+            nParent.setChild(nNew);
+        }else{
+            List<Position<E>> lc = (List<Position<E>>) children(p);
+            TreeNode<E> nLastS = checkPosition(lc.get(lc.size()-1));
+            nLastS.setSibling(nNew);
         }
         size++;
-        return (Position<E>) newNode;
+        return nNew;
     }
 
+    /**
+     * Removes a node and its corresponding subtree rooted at node.
+     *
+     * @param p the position of the node to be removed.
+     * @throws IllegalStateException if the position is not valid
+     */
     public void remove(Position<E> p) throws IllegalStateException {
-        LCRSTreeNode<E> node = checkPosition(p);
-        if (node.getParent() != null) {  //Si el nodo tiene padre, recorro desde el nodo
-            Iterator<Position<E>> it = this.iteratorFactory.createIterator(this, p);
-            int cont = 0;  //En el contador guardo el numero de elementos que hay por debajo del nodo
-            while (it.hasNext()) {
-                it.next();
-                cont++;
-            }  //Al eliminar el nodo, se van a eliminar todos sus hijos y demas elementos por debajo
-            size = size - cont;  //por lo que esta es la forma mas rapida de eliminar y actualizar el tamaño
-
-            LCRSTreeNode<E> hijo = node.getChild();
-            LCRSTreeNode<E> padre = node.getParent();
-            LCRSTreeNode<E> hermano = node.getSibling();
-            if ((hijo != null) && (hijo.getSibling() != null)) {  //Si nodo tiene hijos e hijo tiene hermano
-                hijo.setParent(padre);  //Hijo de nodo a eliminar pasa a tener como padre al padre del nodo a eliminar
-                hijo.getSibling().setSibling(hermano);
-                //hermano del Hijo del nodo a eliminar pasa a tener como hermano al hermano nodo a eliminar
-
-            } else if ((hijo == null) && (hermano != null)) {  //Si no tiene hijos pero sí hermanos
-                hermano.setParent(padre);
-            } else if ((hijo != null) && (hijo.getSibling() == null)) { //Si nodo tiene hijos e hijo no tiene hermano
-                hijo.setParent(padre);
-                hijo.setSibling(hermano); //Hermano del hijo va a ser hermano del nodo a eliminar
-            }
-            node.setParent(null);  //Poniendo todos sus punteros a null, se elimina el nodo automaticamente
-            node.setChild(null);
-            node.setSibling(null);
-            node.setElement(null);
-
-        } else {
+        TreeNode<E> node = checkPosition(p);
+        if(node.getParent() == null){
             this.root = null;
             this.size = 0;
+        }else{
+            Iterator<Position<E>> it = this.iteratorFactory.createIterator(this,p);
+            int counter = 0;
+            while(it.hasNext()){
+                it.next();
+                counter++;
+            }
+            TreeNode<E> nodeParent = node.getParent();
+            if(nodeParent.getChild() == node){
+                if(node.getSibling() != null){
+                    nodeParent.setChild(node.getSibling());
+                }else{
+                    nodeParent.setChild(null);
+                }
+            }else{
+                List<Position<E>> lc = (List<Position<E>>) children(nodeParent);
+                for(Position<E> c : lc){
+                    TreeNode<E> cNode = checkPosition(c);
+                    if(cNode.getSibling() == node){
+                        cNode.setSibling(node.getSibling());
+                        break;
+                    }
+                }
+            }
+            node.setSibling(null);
+            node.setParent(null);
+            node.setChild(null);
+            node.setElement(null);
+            node.setMyTree(null);
+            size = size - counter;
         }
     }
 
@@ -229,43 +335,59 @@ public class LCRSTree<E> implements Tree<E> {
         return this.iteratorFactory.createIterator(this);
     }
 
-    public Position<E> moveSubtree(Position<E> pOrig, Position<E> pDest) throws IllegalStateException {
-        //Creado
-        LCRSTreeNode<E> origen = checkPosition(pOrig); //puntero al nodo origen
-        LCRSTreeNode<E> destino = checkPosition(pDest); //puntero al nodo destino
-        LCRSTreeNode<E> pAux, pAux2;  //Puntero auxiliar
-        LCRSTreeNode<E> pAuxHijo, pAuxHermano; //puntero auxiliar
-
-        if (origen.getParent() == null) { //Si el nodo origen es la raíz... EXCEPCION
-            throw new IllegalStateException("The position is root");
-        } else {
-            pAux2 = origen.getParent(); //Puntero al padre
-            pAuxHijo = pAux2.getChild();  //Puntero al hijo del padre
-            pAuxHermano = pAuxHijo.getSibling(); //Puntero al hermano de pAuxHijo
-
-            if (pAuxHijo == origen) { //Si el nodo origen es el primer hijo
-                pAux2.setChild(origen.getSibling()); //ahora el primer hijo es el hermano del origen
-            } else {
-                while (pAuxHermano != origen) { //busco para encontrar el nodo origen
-                    pAuxHijo = pAuxHermano;  //puntero al hermano siguiente
-                    pAuxHermano = pAuxHermano.getSibling();  //Sigo recorriendo hermanos
-                }
-                pAuxHijo.setSibling(origen.getSibling()); //coloco el hermano anterior al hermano siguiente del nodo origen
-            }
-            origen.setParent(destino); //cuelgo el nodo origen al destino
-            origen.setSibling(null); //hago que no tenga hermanos
-
-            if (destino.getChild() == null) {  //Si destino no tiene hijos, se añade sin mas
-                destino.setChild(origen);
-            } else {  //Caso contrario (tiene hijos). Lo añadimos como hijo de destino y los hijos que ya tenia, pasan como hermanos de origen
-                pAux = destino.getChild();  //Puntero auxiliar al hijo de destino
-                while (pAux.getSibling() != null) {  //Recorro los hermanos del hijo de destino hasta que no haya mas
-                    pAux = pAux.getSibling();
-                }
-                pAux.setSibling(origen);  //Cuando no haya mas, el siguiente hermano sera el nodo origen
-
+    /** Moves a node and its corresponding subtree (rooted at pOrig) to make it as a new children of pDest
+     *
+     * @param pOrig position of nodeOrig
+     * @param pDest position of nodeDest
+     * @return the position of destination node
+     * @throws IllegalStateException
+     */
+    public Position<E> moveSubtree(Position<E> pOrig, Position<E> pDest) throws IllegalStateException{
+        TreeNode<E> nOrig = checkPosition(pOrig);
+        TreeNode<E> nDest = checkPosition(pDest);
+        boolean descendent = false;
+        Iterator<Position<E>> it = this.iteratorFactory.createIterator(this,pOrig);
+        while(it.hasNext() && descendent==false){
+            if(it.next() == pDest){
+                descendent = true;
             }
         }
-        return origen;   //Devuelvo el nodo origen
+        if(descendent == true){            //Si el nodo destino es descendiente del origen
+            throw new IllegalStateException("Destination Node can't be a descendent of Origin Node.");
+        }else{
+            removeMove(nOrig);
+            List<Position<E>> lc = (List<Position<E>>) children(nDest);
+            if(lc.size()>0) {
+                TreeNode<E> nLastS = checkPosition(lc.get(lc.size() - 1));
+                nLastS.setSibling(nOrig);
+                nOrig.setParent(nDest);
+            }else{
+                nDest.setChild(nOrig);
+                nOrig.setParent(nDest);
+            }
+        }
+
+        return (Position) nDest;
+    }
+
+    private void removeMove(Position<E> p) throws IllegalStateException {
+        TreeNode<E> node = checkPosition(p);
+        TreeNode<E> nodeParent = node.getParent();
+        if(nodeParent.getChild() == node){
+            if(node.getSibling() != null){
+                nodeParent.setChild(node.getSibling());
+            }else{
+                nodeParent.setChild(null);
+            }
+        }else{
+            List<Position<E>> lc = (List<Position<E>>) children(nodeParent);
+            for(Position<E> c : lc){
+                TreeNode<E> cNode = checkPosition(c);
+                if(cNode.getSibling() == node){
+                    cNode.setSibling(node.getSibling());
+                    break;
+                }
+            }
+        }
     }
 }
