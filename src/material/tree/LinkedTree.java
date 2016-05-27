@@ -290,8 +290,8 @@ public class LinkedTree<E> implements Tree<E> {
      * @throws IllegalStateException
      */
     public Position<E> moveSubtree(Position<E> pOrig, Position<E> pDest) throws IllegalStateException{
-        TreeNode<E> nodeO = checkPosition(pOrig);
-        TreeNode<E> nodeD = checkPosition(pDest);
+        TreeNode<E> nodeO = (TreeNode<E>) pOrig;
+        TreeNode<E> nodeD = (TreeNode<E>) pDest;
         boolean descendent = false;
         Iterator<Position<E>> it = this.iteratorFactory.createIterator(this,pOrig);
         while(it.hasNext() && descendent==false){
@@ -302,12 +302,21 @@ public class LinkedTree<E> implements Tree<E> {
         if(descendent == true){            //Si el nodo destino es descendiente del origen
             throw new IllegalStateException("Destination Node can't be a descendent of Origin Node.");
         }else{
+            nodeO.setMyTree(nodeD.getMyTree());
             nodeO.getParent().getChildren().remove(nodeO);  //Eliminamos origen de los hijos de su padre
             nodeO.setParent(nodeD);                         //Padre del origen = destino
             nodeD.getChildren().add(nodeO);                 //Nodo origen en los hijos del destino
+            changeMytrees(nodeO,nodeD);
         }
 
         return (Position) nodeD;
+    }
+
+    private void changeMytrees(TreeNode<E> nodeO, TreeNode<E> nodeD){
+        nodeO.setMyTree(nodeD.getMyTree());
+        for(TreeNode<E> child : nodeO.getChildren()){
+            changeMytrees(child, nodeD);
+        }
     }
 
 }
