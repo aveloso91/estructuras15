@@ -222,7 +222,9 @@ public class GameOfThrones {
     public void printLinkedTree(LinkedTree<FamilyMember> family){
         System.out.println("*** Family \"" + family.root().getElement().getSurname() + "\" ***");
         System.out.println();
-        Iterator<Position<FamilyMember>> it = new PreorderIteratorFactory<FamilyMember>().createIterator(family);
+        family.setIterator(new PreorderIteratorFactory<>());
+//        Iterator<Position<FamilyMember>> it = new PreorderIteratorFactory<FamilyMember>().createIterator(family);
+        Iterator<Position<FamilyMember>> it = family.iterator();
         Position <FamilyMember> tabs = null;
         while(it.hasNext()){
             Position<FamilyMember> member = it.next();
@@ -287,7 +289,7 @@ public class GameOfThrones {
                         System.out.println("Write the surname of the family that you want find:");
                         str1 = board.nextLine();
                         try{
-                            System.out.println("The"+ str1 +"'s heir is: " + findHeir(str1));
+                            System.out.println("The "+ str1 +"'s heir is: " + findHeir(str1));
                         }catch (NoSuchFieldException e){
                             System.out.println(e.getMessage());
                         }
