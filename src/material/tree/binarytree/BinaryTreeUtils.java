@@ -59,15 +59,15 @@ public class BinaryTreeUtils<E> {
 
     }
 
-    private void mirrorABT(Position<E> root, ArrayBinaryTree<E> solucion, Position<E> rootS){
+    private void mirrorABT(Position<E> root, ArrayBinaryTree<E> result, Position<E> rootResult){
         if(!this.binTree.isLeaf(root)){
             if(this.binTree.hasLeft(root)){
-                solucion.insertRight(rootS, this.binTree.left(root).getElement());
-                mirrorABT(this.binTree.left(root), solucion, solucion.right(rootS));
+                result.insertRight(rootResult, this.binTree.left(root).getElement());
+                mirrorABT(this.binTree.left(root), result, result.right(rootResult));
             }
             if(this.binTree.hasRight(root)){
-                solucion.insertLeft(rootS, this.binTree.right(root).getElement());
-                mirrorABT(this.binTree.right(root), solucion, solucion.left(rootS));
+                result.insertLeft(rootResult, this.binTree.right(root).getElement());
+                mirrorABT(this.binTree.right(root), result, result.left(rootResult));
             }
         }
     }

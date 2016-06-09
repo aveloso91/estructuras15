@@ -431,4 +431,35 @@ public class LinkedBinaryTree<E> implements BinaryTree<E> {
         return node;
     }
 
+
+    public Position<E> moveSubTree(Position<E> pOrig, Position<E> pDest) throws IllegalStateException { //similar a movesubtree
+        BTNode<E> orig = (BTNode<E>) pOrig;
+        BTNode<E> dest = (BTNode<E>) pDest;
+
+        moveTreeAux(orig, dest);
+
+        orig.setParent(dest);	//Establezco a dest como padre del nodo orig.
+
+        if (hasLeft(pDest) && hasRight(pDest)) {
+            throw new IllegalStateException("No se puede mover a un nodo con dos hijos!");
+        } else if (!hasLeft(pDest) && !hasRight(pDest)) {//si no tiene ningun hijo lo meto  la izq
+            dest.setLeft(orig);
+        } else if (hasLeft(pDest) && !hasRight(pDest)) {//si tiene un hijo lo meto en el otro
+            dest.setRight(orig);
+        } else {
+            dest.setLeft(orig);
+        }
+        orig.myTree.size = 0;
+        dest.myTree.size = dest.myTree.calculateSize(dest.myTree.root);
+
+        return pDest ;
+    }
+
+    private void moveTreeAux(BTNode<E> orig, BTNode<E> dest) {  //cambiamos los mytree
+        orig.setMyTree(dest.getMyTree());
+        for (Position<E> child : children(orig)) {
+            moveTreeAux((BTNode<E>) child, dest);
+        }
+    }
+
 }
