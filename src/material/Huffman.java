@@ -10,17 +10,17 @@ import java.util.*;
  */
 public class Huffman {
 
-    private static class NodoHuffman {
+    private static class NodeHuffman {
 
         String character;
         int frequency;
 
-        public NodoHuffman(String character, int frequency) {
+        public NodeHuffman(String character, int frequency) {
             this.character = character;
             this.frequency = frequency;
         }
 
-        public NodoHuffman() {
+        public NodeHuffman() {
 
         }
 
@@ -42,16 +42,16 @@ public class Huffman {
 
         @Override
         public String toString() {
-            return "NodoHuffman{" +
+            return "NodeHuffman{" +
                     "character='" + character + '\'' +
                     ", frequency=" + frequency +
                     '}';
         }
     }
 
-    private static ArrayList<LinkedBinaryTree<NodoHuffman>> hTrees = new ArrayList<>(); //Lista de trees
-    private static ArrayList<NodoHuffman> charactersString = new ArrayList<>(); //Array donde guardamos los elementos de la frase con frc
-    private static Position<NodoHuffman> nodoCaracter; //nodo que guardara el character de la funcion buscarNodoPorLetra
+    private static ArrayList<LinkedBinaryTree<NodeHuffman>> hTrees = new ArrayList<>(); //Lista de trees
+    private static ArrayList<NodeHuffman> charactersString = new ArrayList<>(); //Array donde guardamos los elementos de la frase con frc
+    private static Position<NodeHuffman> nodoCaracter; //nodo que guardara el character de la funcion buscarNodoPorLetra
 
     /**
      * Recibimos un string.
@@ -66,11 +66,11 @@ public class Huffman {
         String[] campos = sentence.split("");
         for(String c : campos){
             if(c.equals(" ")){
-                charactersString.add(new NodoHuffman("sp", 1));
+                charactersString.add(new NodeHuffman("sp", 1));
             }else if(c.equals("\r")){
-                charactersString.add(new NodoHuffman("lf", 1));
+                charactersString.add(new NodeHuffman("lf", 1));
             }else{
-                charactersString.add(new NodoHuffman(c, 1));
+                charactersString.add(new NodeHuffman(c, 1));
             }
         }
         uniqueList(charactersString);
@@ -82,7 +82,7 @@ public class Huffman {
      * Eliminamos los nodos repetidos y cambiamos la frecuencia de los que hagan falta.
      * @param list
      */
-    public static void uniqueList(List<NodoHuffman> list) {
+    public static void uniqueList(List<NodeHuffman> list) {
         for (int i = 0; i < list.size() - 1; ++i) {
             for (int j = i + 1; j < list.size(); ++j) {
                 if (list.get(i).getCharacter().equalsIgnoreCase(list.get(j).getCharacter())) {
@@ -102,8 +102,8 @@ public class Huffman {
      * Ordenamos los carácteres por frecuencia.
      * @param listHuffman
      */
-    private static void orderChars(List<NodoHuffman> listHuffman) {
-        NodoHuffman aux;
+    private static void orderChars(List<NodeHuffman> listHuffman) {
+        NodeHuffman aux;
         int tam = listHuffman.size() - 1;
         for (int i = 1; i < listHuffman.size(); i++) { //método de la burbuja
             for (int j = tam; j >= i; j--) {
@@ -123,17 +123,17 @@ public class Huffman {
      * frecuencia, la cual es la suma de las frecuencias de los nodos del árbol. Recursivo hasta que sólo haya un tree.
      * @param listHuffman
      */
-    private static void analysis(ArrayList<NodoHuffman> listHuffman) {
-        for(NodoHuffman node : listHuffman){
-            LinkedBinaryTree<NodoHuffman> newTree = new LinkedBinaryTree<>();
+    private static void analysis(ArrayList<NodeHuffman> listHuffman) {
+        for(NodeHuffman node : listHuffman){
+            LinkedBinaryTree<NodeHuffman> newTree = new LinkedBinaryTree<>();
             newTree.addRoot(node);
             hTrees.add(newTree);
         }
         while(hTrees.size() > 1){
-            LinkedBinaryTree<NodoHuffman> newTree = new LinkedBinaryTree<>();
+            LinkedBinaryTree<NodeHuffman> newTree = new LinkedBinaryTree<>();
             int frec1 = hTrees.get(0).root().getElement().getFrequency();//Como ya están ordenados cogemos los 2 primeros
             int frec2 = hTrees.get(1).root().getElement().getFrequency();
-            newTree.addRoot(new NodoHuffman("", frec1+frec2)); //añadimos root del nuevo arbol con string vacío y suma de frecs
+            newTree.addRoot(new NodeHuffman("", frec1+frec2)); //añadimos root del nuevo arbol con string vacío y suma de frecs
 
             newTree.moveSubTree(hTrees.get(0).root(), newTree.root()); //Insertamos los dos árboles
             newTree.moveSubTree(hTrees.get(1).root(), newTree.root()); //Gracias a moveSubTree uno sera izq y el otro der.
@@ -149,8 +149,8 @@ public class Huffman {
      * Ordenamos los árboles. Método de la burbuja.
      * @param listTrees
      */
-    private static void orderTrees(ArrayList<LinkedBinaryTree<NodoHuffman>> listTrees) {  //Ordenamos el arraylist de arboles
-        LinkedBinaryTree<NodoHuffman> aux;
+    private static void orderTrees(ArrayList<LinkedBinaryTree<NodeHuffman>> listTrees) {  //Ordenamos el arraylist de arboles
+        LinkedBinaryTree<NodeHuffman> aux;
         int tam = listTrees.size() - 1;
         for (int i = 1; i < listTrees.size(); i++) {
             for (int j = tam; j >= i; j--) {
@@ -172,9 +172,9 @@ public class Huffman {
      */
     private static String encode(String character) throws IndexOutOfBoundsException{
         String result = "";
-        LinkedBinaryTree<NodoHuffman> tree = hTrees.get(0);
-        Position<NodoHuffman> pos = searchByChar(tree, character);
-        Position<NodoHuffman> posParent = tree.parent(pos);
+        LinkedBinaryTree<NodeHuffman> tree = hTrees.get(0);
+        Position<NodeHuffman> pos = searchByChar(tree, character);
+        Position<NodeHuffman> posParent = tree.parent(pos);
         if(pos.equals(tree.root())){
             throw new IndexOutOfBoundsException("Something was wrong.");
         }
@@ -211,14 +211,14 @@ public class Huffman {
      * @return position of found character
      * @throws IndexOutOfBoundsException
      */
-    private static Position<NodoHuffman> searchByChar (LinkedBinaryTree<NodoHuffman> tree, String c)
+    private static Position<NodeHuffman> searchByChar (LinkedBinaryTree<NodeHuffman> tree, String c)
         throws IndexOutOfBoundsException{
         if(hTrees.isEmpty()){
             throw new IndexOutOfBoundsException("Not elements in tree.");
         }
-        Iterator<Position<NodoHuffman>> it = tree.iterator();
+        Iterator<Position<NodeHuffman>> it = tree.iterator();
         while (it.hasNext()){
-            Position<NodoHuffman> pos = it.next();
+            Position<NodeHuffman> pos = it.next();
             if(pos.getElement().getCharacter().equalsIgnoreCase(c)){
                 return pos;
             }
@@ -230,13 +230,13 @@ public class Huffman {
      * Método que pinta por pantalla el árbol.
      * @param trees
      */
-    public void printLinkedTree(ArrayList<LinkedBinaryTree<NodoHuffman>> trees){
+    public void printLinkedTree(ArrayList<LinkedBinaryTree<NodeHuffman>> trees){
         System.out.println("*** Huffman Tree ***");
         System.out.println();
-        Iterator<Position<NodoHuffman>> it = trees.get(0).iterator();
-        Position <NodoHuffman> tabs = null;
+        Iterator<Position<NodeHuffman>> it = trees.get(0).iterator();
+        Position <NodeHuffman> tabs = null;
         while(it.hasNext()){
-            Position<NodoHuffman> member = it.next();
+            Position<NodeHuffman> member = it.next();
             tabs = member;
             while (tabs != trees.get(0).root()){
                 tabs = trees.get(0).parent(tabs);
