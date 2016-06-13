@@ -3,7 +3,7 @@ package material.maps;
 public class HashTableMapDH<K, V> extends AbstractHashTableMap<K, V> {
 
     public HashTableMapDH(int size) {
-        super();
+        super(size);
     }
 
     public HashTableMapDH() {
@@ -11,7 +11,7 @@ public class HashTableMapDH<K, V> extends AbstractHashTableMap<K, V> {
     }
 
     public HashTableMapDH(int p, int cap) {
-        super();
+        super(p,cap);
     }
 
     @Override

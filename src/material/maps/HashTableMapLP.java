@@ -9,7 +9,7 @@ public class HashTableMapLP<K, V> extends AbstractHashTableMap<K, V> {
      * @return
      */
     public HashTableMapLP(int size) {
-        super();
+        super(size);
     }
 
     public HashTableMapLP() {
@@ -17,7 +17,7 @@ public class HashTableMapLP<K, V> extends AbstractHashTableMap<K, V> {
     }
 
     public HashTableMapLP(int p, int cap) {
-        super();
+        super(p,cap);
     }
 
     @Override

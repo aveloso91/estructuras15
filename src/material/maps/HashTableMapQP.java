@@ -3,7 +3,7 @@ package material.maps;
 public class HashTableMapQP<K, V> extends AbstractHashTableMap<K, V> {
 
     public HashTableMapQP(int size) {
-        super();
+        super(size);
     }
 
     public HashTableMapQP() {
@@ -11,7 +11,7 @@ public class HashTableMapQP<K, V> extends AbstractHashTableMap<K, V> {
     }
 
     public HashTableMapQP(int p, int cap) {
-        super();
+        super(p,cap);
     }
 
     @Override
