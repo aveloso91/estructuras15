@@ -135,7 +135,7 @@ public class RBTreeTest {
         Position<String> a = b.insert("1");
         b.insert("4");
 
-        assertEquals(b.first().getElement(), a);
+        assertEquals(b.first().getElement(), a.getElement());
     }
 
     @Test
@@ -148,7 +148,7 @@ public class RBTreeTest {
         b.insert(1);
         b.insert(4);
 
-        assertEquals(b.last().getElement(), a);
+        assertEquals(b.last().getElement(), a.getElement());
     }
 
     @Test
@@ -226,6 +226,45 @@ public class RBTreeTest {
         System.out.println ("ARN: "+salida);
         assertTrue(salida.equals("11 10 5 6 5 10 12 "));
         assertTrue(lista.size()==7);
+    }
+
+    @Test
+    public void testARNFL() {
+        //nos creamos un árbol binario de búsqueda
+        RBTree<Integer> arbol = new RBTree<>();
+        arbol.insert(5);
+        arbol.insert(11);
+        Position<Integer> pos1 = arbol.insert(10);
+        arbol.insert(4);
+        arbol.insert(18);
+        arbol.insert(12);
+        arbol.insert(19);
+        arbol.insert(14);
+        Integer last = arbol.last().getElement();
+        Integer first = arbol.first().getElement();
+        System.out.println ("Last: "+last);
+        System.out.println ("First: "+first);
+
+        assertTrue(last==19);
+        assertTrue(first==4);
+
+
+        Iterable<Position<Integer>> suc = arbol.successors(pos1);
+        String cadena = "";
+        for (Position<Integer> p: suc) {
+            System.out.println (p.getElement());
+            cadena += p.getElement()+" ";
+        }
+        assertTrue(cadena.equals("12 11 18 14 19 "));
+
+        cadena = "";
+        Iterable<Position<Integer>> pred = arbol.predecessors(pos1);
+        for (Position<Integer> p: pred) {
+            System.out.println (p.getElement());
+            cadena += p.getElement()+" ";
+        }
+        assertTrue(cadena.equals("5 4 "));
+
     }
 }
 

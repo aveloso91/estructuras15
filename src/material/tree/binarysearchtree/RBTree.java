@@ -337,7 +337,8 @@ public class RBTree<E> implements BinarySearchTree<E> {
      */
     @Override
     public Position<E> first() {
-        return (Position<E>) bst.first();
+        Position<RBInfo<E>> p = bst.first();
+        return p.getElement();
     }
 
     /**
@@ -345,7 +346,8 @@ public class RBTree<E> implements BinarySearchTree<E> {
      */
     @Override
     public Position<E> last() {
-        return (Position<E>) bst.last();
+        Position<RBInfo<E>> p = bst.last();
+        return p.getElement();
     }
 
     /**
@@ -377,43 +379,5 @@ public class RBTree<E> implements BinarySearchTree<E> {
             res.add(it.next().getElement()); //De un Position<AVLInfo<E>> le hacemos el getElement y tenemos el AVLInfo<E> que es un compatible con Position de <E>
         return res;
     }
-
-//    /**
-//     * Returns an iterable collection with all values smaller than pos
-//     *
-//     * @param pos
-//     */
-//    @Override
-//    public Iterable<Position<E>> successors(Position<E> pos) {
-//        RBInfo<E> pos1 = (RBInfo<E>) pos;
-//        Position<RBInfo<E>> p = pos1.pos; //Igual que en AVL
-//        Iterable<Position<RBInfo<E>>> output = bst.successors(p);
-//
-//        List<Position<E>> l = new ArrayList<Position<E>>();
-//        for (Position<RBInfo<E>> aux : output) {
-//            l.add(aux.getElement());
-//        }
-//
-//        return l;
-//    }
-//
-//    /**
-//     * Returns an iterable collection with all values larger than pos
-//     *
-//     * @param pos
-//     */
-//    @Override
-//    public Iterable<Position<E>> predecessors(Position<E> pos) {
-//        RBInfo<E> pos1 = (RBInfo<E>) pos;
-//        Position<RBInfo<E>> p = pos1.pos; //Igual que en AVL
-//        Iterable<Position<RBInfo<E>>> output = bst.predecessors(p);
-//
-//        List<Position<E>> l = new ArrayList<Position<E>>();
-//        for (Position<RBInfo<E>> aux : output) {
-//            l.add(aux.getElement());
-//        }
-//
-//        return l;
-//    }
 
 }

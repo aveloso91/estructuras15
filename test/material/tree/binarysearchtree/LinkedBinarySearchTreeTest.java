@@ -207,4 +207,43 @@ public class LinkedBinarySearchTreeTest {
         assertTrue(salida.equals("10 5 6 5 11 10 12 "));
         assertTrue(lista.size()==7);
     }
+
+    @Test
+    public void testABBFL() {
+        //nos creamos un árbol binario de búsqueda
+        LinkedBinarySearchTree<Integer> arbol = new LinkedBinarySearchTree<>();
+        arbol.insert(5);
+        arbol.insert(11);
+        Position<Integer> pos1 = arbol.insert(10);
+        arbol.insert(4);
+        arbol.insert(18);
+        arbol.insert(12);
+        arbol.insert(19);
+        arbol.insert(14);
+        Integer last = arbol.last().getElement();
+        Integer first = arbol.first().getElement();
+        System.out.println ("Last: "+last);
+        System.out.println ("First: "+first);
+
+        assertTrue(last==19);
+        assertTrue(first==4);
+
+
+        Iterable<Position<Integer>> suc = arbol.successors(pos1);
+        String cadena = "";
+        for (Position<Integer> p: suc) {
+            System.out.println (p.getElement());
+            cadena += p.getElement()+" ";
+        }
+        assertTrue(cadena.equals("11 18 12 14 19 "));
+
+        cadena = "";
+        Iterable<Position<Integer>> pred = arbol.predecessors(pos1);
+        for (Position<Integer> p: pred) {
+            System.out.println (p.getElement());
+            cadena += p.getElement()+" ";
+        }
+        assertTrue(cadena.equals("5 4 "));
+
+    }
 }

@@ -265,7 +265,8 @@ public class AVLTree<E> implements BinarySearchTree<E> {
      */
     @Override
     public Position<E> last() {
-        return (Position<E>)bst.last();
+        Position<AVLInfo<E>> p = bst.last();
+        return p.getElement();
     }
 
     /**
@@ -273,7 +274,8 @@ public class AVLTree<E> implements BinarySearchTree<E> {
      */
     @Override
     public Position<E> first() {
-        return (Position<E>)bst.first();
+        Position<AVLInfo<E>> p = bst.first();
+        return p.getElement();
     }
 
     /**
