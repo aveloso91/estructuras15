@@ -1,5 +1,6 @@
-package material;
+package material.apps;
 
+import material.NodeHuffman;
 import material.tree.Position;
 import material.tree.binarytree.LinkedBinaryTree;
 
@@ -9,45 +10,6 @@ import java.util.*;
  * Created by Alejandro on 3/6/16.
  */
 public class Huffman {
-
-    private static class NodeHuffman {
-
-        String character;
-        int frequency;
-
-        public NodeHuffman(String character, int frequency) {
-            this.character = character;
-            this.frequency = frequency;
-        }
-
-        public NodeHuffman() {
-
-        }
-
-        public String getCharacter() {
-            return character;
-        }
-
-        public void setCharacter(String character) {
-            this.character = character;
-        }
-
-        public int getFrequency() {
-            return frequency;
-        }
-
-        public void setFrequency(int frequency) {
-            this.frequency = frequency;
-        }
-
-        @Override
-        public String toString() {
-            return "NodeHuffman{" +
-                    "character='" + character + '\'' +
-                    ", frequency=" + frequency +
-                    '}';
-        }
-    }
 
     private static ArrayList<LinkedBinaryTree<NodeHuffman>> hTrees = new ArrayList<>(); //Lista de trees
     private static ArrayList<NodeHuffman> charactersString = new ArrayList<>(); //Array donde guardamos los elementos de la frase con frc
