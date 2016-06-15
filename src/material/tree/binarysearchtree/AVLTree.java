@@ -307,42 +307,4 @@ public class AVLTree<E> implements BinarySearchTree<E> {
             res.add(it.next().getElement());
         return res;
     }
-
-    //
-//    /**
-//     * Returns an iterable collection with all values smaller than pos
-//     *
-//     * @param pos
-//     */
-//    @Override
-//    public Iterable<Position<E>> successors(Position<E> pos) {
-//        AVLInfo<E> pos1 = (AVLInfo<E>) pos;
-//        Position<AVLInfo<E>> p = pos1.pos; //Accedemos al BTNode contenido en la info
-//        Iterable<Position<AVLInfo<E>>> output = bst.successors(p);
-//
-//        List<Position<E>> l = new ArrayList<>();
-//        for (Position<AVLInfo<E>> aux : output) {
-//            l.add(aux.getElement());
-//        }
-//        return l;
-//    }
-//
-//    /**
-//     * Returns an iterable collection with all values larger than pos
-//     *
-//     * @param pos
-//     */
-//    @Override
-//    public Iterable<Position<E>> predecessors(Position<E> pos) {
-//        AVLInfo<E> pos1 = (AVLInfo<E>) pos;
-//        Position<AVLInfo<E>> p = pos1.pos; //Accedemos al AVLInfo contenido que es instancia de BTNode
-//
-//        Iterable<Position<AVLInfo<E>>> output = bst.predecessors(p);
-//
-//        List<Position<E>> l = new ArrayList<>();
-//        for (Position<AVLInfo<E>> aux : output) {  //Recorremos los valores entre el maximo y el minimo
-//            l.add(aux.getElement());   //Los vamos anyadiendo
-//        }
-//        return l;
-//    }
 }

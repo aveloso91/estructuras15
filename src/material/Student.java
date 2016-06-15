@@ -69,7 +69,9 @@ public class Student{
 
         @Override
         public int compare(Student st, Student st1) {
-            return st.name.compareTo(st1.getName());
+            String name1 = st.getName();
+            String name2 = st1.getName();
+            return name1.compareTo(name2);
         }
 
     }
@@ -82,8 +84,7 @@ public class Student{
                 return 0;
             } else if (st.getAge() < st1.getAge()) {
                 return -1;
-            } else //Caso de que st sea mayor que st1
-            {
+            } else{
                 return +1;
             }
         }
@@ -98,8 +99,7 @@ public class Student{
                 return 0;
             } else if (st.getMark() < st1.getMark()) {
                 return -1;
-            } else //Caso de que st tenga mayor nota que st1
-            {
+            } else{
                 return +1;
             }
         }
